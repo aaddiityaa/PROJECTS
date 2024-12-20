@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend-Only Webpage</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav {
+            margin: 1rem auto;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 1rem;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero button {
+            padding: 0.5rem 1rem;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .hero button:hover {
+            background: #f4f4f9;
+        }
+        .section {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .feedback-form input, .feedback-form textarea {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .feedback-form button {
+            padding: 0.5rem;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .feedback-form button:hover {
+            background: #4a0da3;
+        }
+        .feedback-list {
+            margin-top: 1rem;
+        }
+        .feedback-item {
+            padding: 1rem;
+            border-bottom: 1px solid #ccc;
+        }
+        .feedback-item p {
+            margin: 0.5rem 0;
+        }
+        .feedback-item .delete-btn {
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Frontend-Only Webpage</h1>
+        <nav>
+            <a href="#hero">Home</a>
+            <a href="#feedback">Feedback</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+    <section id="hero" class="hero">
+        <h1>Welcome to Our Page</h1>
+        <p>Your one-stop solution for frontend experiences.</p>
+        <button onclick="alert('Enjoy your stay!')">Get Started</button>
+    </section>
+    <section id="feedback" class="section">
+        <h2>Feedback</h2>
+        <form class="feedback-form" id="feedbackForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <textarea id="message" placeholder="Your Feedback" rows="4" required></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+        <div class="feedback-list" id="feedbackList"></div>
+    </section>
+    <section id="about" class="section">
+        <h2>About Us</h2>
+        <p>We specialize in crafting dynamic and engaging web applications. Our focus is on delivering excellence through the power of frontend technologies.</p>
+    </section>
+    <footer>
+        <p>© 2024 Frontend Solutions. All rights reserved. <a href="#hero">Back to Top</a></p>
+    </footer>
+    <script>
+        const feedbackForm = document.getElementById('feedbackForm');
+        const feedbackList = document.getElementById('feedbackList');
+        let feedbackData = JSON.parse(localStorage.getItem('feedbackData')) || [];
+
+        // Function to render feedback
+        function renderFeedback() {
+            feedbackList.innerHTML = '';
+            feedbackData.forEach((item, index) => {
+                const feedbackItem = document.createElement('div');
+                feedbackItem.className = 'feedback-item';
+                feedbackItem.innerHTML = `
+                    <p><strong>${item.name}</strong> says:</p>
+                    <p>${item.message}</p>
+                    <button class="delete-btn" onclick="deleteFeedback(${index})">Delete</button>
+                `;
+                feedbackList.appendChild(feedbackItem);
+            });
+        }
+
+        // Add feedback
+        feedbackForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            feedbackData.push({ name, message });
+            localStorage.setItem('feedbackData', JSON.stringify(feedbackData));
+            renderFeedback();
+            feedbackForm.reset();
+        });
+
+        // Delete feedback
+        function deleteFeedback(index) {
+            feedbackData.splice(index, 1);
+            localStorage.setItem('feedbackData', JSON.stringify(feedbackData));
+            renderFeedback();
+        }
+
+        // Load feedback on page load
+        renderFeedback();
+    </script>
+</body>
+</html>
